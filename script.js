@@ -16,83 +16,104 @@
 
 // var randomNumberBetween0and19 = Math.floor(Math.random() * 20);
 
-var namePrompt= prompt("What is your name?");
-var mmrPrompt= prompt("What is your MMR?");
-var gameStatus= "y";
+var namePrompt = prompt("What is your name?");
+var gameStatus = "y";
 var gameLives;
 
+var suppStages = [{
+        stageNo: 1,
+        stageName: "Laning",
+        actionTaken: "1. Farm creeps \n2. Harrass enemies",
+        endResult: [
+            ["Stop stealing CS", 1],
+            ["Nice support", 0]
+        ]
+    },
+    {
+        stageNo: 2,
+        stageName: "Teamfight",
+        actionTaken: "1.Kill support \n2. control fight",
+        endResult: [
+            ["Not enough damage", 1],
+            ["Nice control", 0]
+        ]
+    },
 
+    {
+        stageNo: 3,
+        stageName: "Push the high ground",
+        actionTaken: "1.Kill barracks \n2. distract heroes",
+        endResult: [
+            ["Not enough damage", 1],
+            ["Nice distracting", 0]
+        ]
 
-
-while (gameStatus == "y"){
-    
-    if (mmrPrompt<3000){
-        gameLives=1;
-    }else if (mmrPrompt<6000){
-        gameLives=2;
-    }else if (mmrPrompt<10000){
-        gameLives=3;
-    }else {
-        prompt("reenter your MMR");
     }
+];
+
+var carryStages = [{
+        stageNo: 1,
+        stageName: "Laning",
+        actionTaken: "1.Farm creeps \n2. Harrass enemies",
+        endResult: [
+            ["CS pogU", 0],
+            ["CS LUL", 1]
+        ]
+    },
+    {
+        stageNo: 2,
+        stageName: "Teamfight",
+        actionTaken: "1.Kill support \n2. control fight",
+        endResult: [
+            ["won teamfight", 0],
+            ["lost teamfight", 1]
+        ]
+    },
+    {
+        stageNo: 3,
+        stageName: "Push the high ground",
+        actionTaken: "1. Kill barracks \n2. distract heroes",
+        endResult: [
+            ["Nice! Super creeps", 0],
+            ["Rax is preserved. Retreat", 1]
+        ]
+    }
+]
+
+
+while (gameStatus == "y") {
+    var mmrPrompt = prompt("What is your MMR?");
+   
+   //while to prevent invalid no
+    if (mmrPrompt < 3000) {
+        gameLives = 1;
+    } else if (mmrPrompt < 6000) {
+        gameLives = 2;
+    } else if (mmrPrompt < 10000) {
+        gameLives = 3;
+    } 
 
     alert("Game is beginning.");
-    heroPick=prompt("Pick your role \n1. Support \n2. Carry");
-
-    //stage 1
-    alert("This is the laning stage. Decide what you should do.");
-    var actionTaken = prompt("\n1. Farm creeps \n2. harrass enemy heroes");
-    if (heroPick == "1" && actionTaken == "1"){
-        alert("God damn baboons ruining my game");
-        gameLives= gameLives -1;
-        alert("You have lost one life");
-    }else if (heroPick =="1" && actionTaken =="2"){
-        alert("Good job baboons");
-    }else if (heroPick =="2" && actionTaken =="1"){
-        alert("CS pogU");
-    }else if (heroPick=="2"&& actionTaken =="2"){
-        alert("CS LUL");
-        gameLives= gameLives -1;
-        alert("you have lost one life");
+    heroPick = prompt("Pick your role \n1. Support \n2. Carry");
+    var currentGameStage;
+    if (heroPick == 1) {
+        currentGameStage = suppStages;
+    } else if (heroPick == 2) {
+        currentGameStage = carryStages;
     }
-    console.log(gameLives);
-    
-    //stage 2
-    alert("A team fight is about to begin. Decide what you should do.");
-    var actionTakenMid = prompt("\n1. Focus on killing heroes \n2. Save carries and control fight");
-    if (heroPick=="1" && actionTakenMid=="1"){
-        alert("You lost the teamfight.Try protecting your team next time");
-        gameLives=gameLives-1;
-        alert("You have lost one life");      
-    }else if (heroPick =="1" && actionTakenMid=="2"){
-        alert("Masterful supporting job, well done. You won the fight");
-    }else if (heroPick=="2" && actionTakenMid=="1"){
-        alert("You won the teamfight. Rampage");
-    }else if (heroPick=="2" && actionTakenMid=="2"){
-        alert("Not enough damage. Your team just got wiped");
-        gameLives= gameLives-1;
-        alert("you have lost one life.")
-    }
-    console.log(gameLives);
 
-    //stage 3
-    alert("The game is approaching the end.Get ready.");
-    var actionTakenEnd = prompt("\n1. Hit barracks and throne \n2. Distract enemy heroes");
-    if (heroPick=="1" && actionTakenEnd=="1"){
-        alert("You lost the battle and your team got wiped.");
-        gameLives=gameLives-1;
-        alert("You have lost one life");      
-    }else if (heroPick =="1" && actionTakenEnd=="2"){
-        alert("Great job! You won the fight and took the barracks");
-    }else if (heroPick=="2" && actionTakenEnd=="1"){
-        alert("You won the teamfight. Nice work");
-    }else if (heroPick=="2" && actionTakenEnd=="2"){
-        alert("Not enough damage. The barracks still stand");
-        gameLives= gameLives-1;
-        alert("you have lost one life.")
-    }
-    console.log(gameLives);
+    for (stageNo = 0; stageNo < currentGameStage.length; stageNo++) {
+        actionTaken = prompt(currentGameStage[stageNo].actionTaken);
+        alert(currentGameStage[stageNo].endResult[actionTaken - 1][0]);
+        gameLives -= currentGameStage[stageNo].endResult[actionTaken - 1][1];
+        alert("You have "+gameLives+" live(s) left");
 
-    alert("Game over. You have "+ gameLives+(" left."));
-    gameStatus= prompt("Do you want to restart?(y/n)");
+        if (gameLives == 0){
+            break;
+        }
+
+    }
+
+    alert("Game over. You have " + gameLives + (" live(s) left."));
+    gameStatus = prompt("Do you want to restart?(y/n)");
 }
